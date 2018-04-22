@@ -6,7 +6,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-// Baylor is awesome
+// Baylor is really awesome
 
 public class MyServerSocket {
     private ServerSocket server;
