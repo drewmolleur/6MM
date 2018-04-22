@@ -6,8 +6,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-// Baylor is really awesome
-
 public class MyServerSocket {
     private ServerSocket server;
     public MyServerSocket(String ipAddress) throws Exception {
