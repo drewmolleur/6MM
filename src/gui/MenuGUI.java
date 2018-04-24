@@ -25,8 +25,8 @@ public class MenuGUI extends JFrame {
         private String clientIP = null;
 	private JButton hvAButton;
 	private JButton avAButton;
-	public MyServerSocket server;
-	public MyClientSocket client;
+	public static MyServerSocket server;
+	public static MyClientSocket client;
 	public MenuGUI() {
 		super("Six Men's Morris");
 		Container c = getContentPane();
@@ -41,47 +41,29 @@ public class MenuGUI extends JFrame {
                 address.setPreferredSize(new Dimension(200,24));
                 join = new JButton("join");
                 join.addActionListener(new ActionListener() {
-                	@Override
-                	public void actionPerformed( ActionEvent e ) {
-                		address.setEditable( false );
-                		clientIP = address.getText();
-                		System.out.println( clientIP );                    
-                                try {
-                                    server = new MyServerSocket( clientIP );
-                                    } catch (Exception e1) {
-                                            System.out.println( "Cannot Connect to server." );
-                                    }
-                            try {
-                                server.listen( clientIP );
-                            } catch (Exception ex) {
-                                System.out.println("Can't listen");
-                            }
-                                    try {
-                                        client = new MyClientSocket(
-                                                InetAddress.getByName(clientIP),
-                                                52018);
-                                        } catch ( Exception ex ) {
-                                            System.out.println( "Cannot Connect to client." );
-                                        }
-                            try {
-                                client.start();
-                            } catch (IOException ex) {
-                                System.out.println("Can't get it up");
-                            }
-                        }
+                    @Override
+                    public void actionPerformed( ActionEvent e ) {
+                        address.setEditable( false );
+                        clientIP = address.getText();
+                        System.out.println( clientIP );                    
+                        server = new MyServerSocket( clientIP );
+                        System.out.println("Server Created");
+                        client = new MyClientSocket();
+                        System.out.println("Client Created");
+                    }
                 });
                 textField.add(join);
 		hvAButton = new JButton("Human vs AI");
 		hvAButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFrame game = new GUI();
-				game.setSize(600, 700);
-				game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				game.setVisible(true);
-				hvAButton.setEnabled(false);
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                            JFrame game = new GUI();
+                            game.setSize(600, 700);
+                            game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                            game.setVisible(true);
+                            hvAButton.setEnabled(false);
                 avAButton.setEnabled(false);
-			}
+                    }
 		});
 		hvAButton.setAlignmentX(CENTER_ALIGNMENT);
 		hvAButton.setAlignmentY(CENTER_ALIGNMENT);
@@ -89,9 +71,7 @@ public class MenuGUI extends JFrame {
                 avAButton.addActionListener(new ActionListener() {
                     @Override 
                     public void actionPerformed(ActionEvent e) {
-                    
                         address.setEditable(true);
-                        
                         hvAButton.setEnabled(false);
                         avAButton.setEnabled(false);
                     }

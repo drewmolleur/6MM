@@ -81,20 +81,18 @@ public class GUI extends JFrame {
 		moveExecutor = new MoveExecutor();
 		boardPanel.setBoard(currentGame, moveExecutor);
 		statusLabel.setText("Your move");
-		
 		int maxDepth = Integer.parseInt(maxDepthTextField.getText());
 		int maxTime = Integer.parseInt(maxTimeTextField.getText()) * 1000;
 		solver = new AlphaBetaPruning(currentGame, maxDepth, maxTime);
 		boardPanel.makeMove();
+                //currentGame.tooglePlayer();
+                //Move move = solver.searchForBestMove();
+                //moveExecutor.makeMove(move);
 	}
-	
 	public GUI() {
-		super("Nine Men's Morris");
-		
+		super("Six Men's Morris");
 		boardPanel = new Board();
-		
 		add(boardPanel, BorderLayout.CENTER);
-		
 		controls = new JPanel();
 		controls.setLayout(new FlowLayout());
 		newGameButton = new JButton("New game");
@@ -116,26 +114,13 @@ public class GUI extends JFrame {
 		controls.add(new JLabel("Status:"));
 		statusLabel = new JLabel("Your move");
 		controls.add(statusLabel);
-		
 		add(controls, BorderLayout.SOUTH);
-		
 		startNewGame();
 	}
-	
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		
 		JFrame menu = new MenuGUI();
 		menu.setSize(300, 300);
 		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		menu.setVisible(true);
-		
-		//JFrame game = new NineMensMorrisGUI();
-		
-		//game.setSize(600, 700);
-		//game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//game.setVisible(true);
 	}
 }

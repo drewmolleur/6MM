@@ -1,35 +1,53 @@
 package model;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MyServerSocket {
-    private final ServerSocket server;
-    public MyServerSocket( String clientIP ) throws Exception {
-        if ( clientIP != null && !clientIP.isEmpty() ) {
-          this.server = new ServerSocket( 52018, 1, InetAddress.getByName( clientIP ) );
-        }
-        else 
-          this.server = new ServerSocket(52018, 1, InetAddress.getLocalHost());
-    }
-    public void listen( String clientIP ) throws Exception {
-        String data = null;
-        Socket client = this.server.accept();
-        String clientAddress = clientIP;
-        System.out.println("\r\nNew connection from " + clientAddress);
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(client.getInputStream()));        
-        while ( (data = in.readLine()) != null ) {
-            System.out.println("\r\nMessage from " + clientAddress + ": " + data);
-        }
-    }
-    public InetAddress getSocketAddress() {
-        return this.server.getInetAddress();
-    }
-    public int getPort() {
-        return this.server.getLocalPort();
+    private ServerSocket ss;
+    public MyServerSocket(String clientIP) {
+        (new Thread() {
+            //Creates Server Socket
+            @Override
+            public void run() {
+                try {
+                    ss = new ServerSocket( 52018 );
+                } catch (UnknownHostException ex) {
+                    Logger.getLogger(MyServerSocket.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(MyServerSocket.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //Creates unknown client server (Ours? Theirs? Both?)
+                Socket s = null;
+                try {
+                    s = ss.accept();
+                } catch (IOException ex) {
+                    Logger.getLogger(MyServerSocket.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //Reading from unknown client server
+                BufferedReader in = null;
+                try {
+                    in = new BufferedReader ( new InputStreamReader( s.getInputStream() ) );
+                    System.out.println( in );
+                } catch (IOException ex) {
+                    Logger.getLogger(MyServerSocket.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //Prints buffered reader
+                String line = null;
+                try {
+                    while (( line = in.readLine() ) != null ) {
+                        System.out.println( line );
+                    }
+                } catch ( IOException ex ) {
+                    Logger.getLogger(MyServerSocket.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }).start();
     }
 }
