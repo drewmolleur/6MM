@@ -2,35 +2,31 @@ package gui;
 
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.IOException;
+import java.net.InetAddress;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import model.MyServerSocket;
 import model.MyClientSocket;
 
 public class MenuGUI extends JFrame {
 	private static final long serialVersionUID = 8300757529304995200L;
 	private JTextField menuText;
-	private JPanel controls;
-        private JPanel textField;
+	private final JPanel controls;
+        private final JPanel textField;
         private JTextField address;
-        private JButton join;
-        private String IPAddress;
+        private final JButton join;
+        private String clientIP = null;
 	private JButton hvAButton;
 	private JButton avAButton;
-	
-	private MyServerSocket server;
-	private MyClientSocket client;
-	
-	
+	public MyServerSocket server;
+	public MyClientSocket client;
 	public MenuGUI() {
 		super("Six Men's Morris");
 		Container c = getContentPane();
@@ -44,21 +40,35 @@ public class MenuGUI extends JFrame {
                 address.setVisible(true);
                 address.setPreferredSize(new Dimension(200,24));
                 join = new JButton("join");
-                
                 join.addActionListener(new ActionListener() {
                 	@Override
-                	public void actionPerformed(ActionEvent e) {
-                		address.setEditable(false);
-                		IPAddress = address.getText();
-                		System.out.println(IPAddress);
-                		
-                		try {
-							server = new MyServerSocket(IPAddress);
-						} catch (Exception e1) {
-							System.out.println("Cannot Connect.");
-						}
-                		client = new MyClientSocket(IPAddress);
-                	}
+                	public void actionPerformed( ActionEvent e ) {
+                		address.setEditable( false );
+                		clientIP = address.getText();
+                		System.out.println( clientIP );                    
+                                try {
+                                    server = new MyServerSocket( clientIP );
+                                    } catch (Exception e1) {
+                                            System.out.println( "Cannot Connect to server." );
+                                    }
+                            try {
+                                server.listen( clientIP );
+                            } catch (Exception ex) {
+                                System.out.println("Can't listen");
+                            }
+                                    try {
+                                        client = new MyClientSocket(
+                                                InetAddress.getByName(clientIP),
+                                                52018);
+                                        } catch ( Exception ex ) {
+                                            System.out.println( "Cannot Connect to client." );
+                                        }
+                            try {
+                                client.start();
+                            } catch (IOException ex) {
+                                System.out.println("Can't get it up");
+                            }
+                        }
                 });
                 textField.add(join);
 		hvAButton = new JButton("Human vs AI");
@@ -69,7 +79,6 @@ public class MenuGUI extends JFrame {
 				game.setSize(600, 700);
 				game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				game.setVisible(true);
-				
 				hvAButton.setEnabled(false);
                 avAButton.setEnabled(false);
 			}
@@ -88,19 +97,12 @@ public class MenuGUI extends JFrame {
                     }
                 });
 		avAButton.setAlignmentX(CENTER_ALIGNMENT);
-                
-		
 		controls.add(Box.createVerticalGlue());
 		controls.add(hvAButton);
 		controls.add(avAButton);
-                //controls.add(address);
-                
 		controls.add(Box.createVerticalGlue());
-		
-		c.add(controls, "Center");
                 textField.add(Box.createHorizontalGlue());
-                c.add(textField, "North");
-                
-                
+                c.add(controls, "Center");
+                c.add(textField, "North"); 
 	}
 }

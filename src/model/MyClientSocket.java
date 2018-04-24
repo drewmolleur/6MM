@@ -1,25 +1,26 @@
 package model;
+
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
+import java.net.InetAddress;
 
 public class MyClientSocket {
-    private Socket socket;
-    private Scanner scanner;
-    
-    private MyClientSocket(String serverAddress) throws Exception {
-        this.socket = new Socket(serverAddress, 52018);
-        this.scanner = new Scanner(System.in);
+    private final Socket socket;
+    private final Scanner scanner;
+    private final String serverIP = "98.162.212.185";
+    public MyClientSocket( InetAddress serverAddress, int serverPort ) throws Exception {
+        this.socket = new Socket( serverAddress, serverPort );
+        this.scanner = new Scanner( System.in );
     }
-    /*private void start() throws IOException {
+    public void start() throws IOException {
         String input;
-        while (true) {
+        while ( true ) {
             input = scanner.nextLine();
-            PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
-            out.println(input);
+            PrintWriter out = new PrintWriter( this.socket.getOutputStream(), true );
+            out.println( input );
             out.flush();
         }
-    }*/
+    }
 }
