@@ -1,5 +1,4 @@
 package model;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -8,13 +7,14 @@ import java.net.Socket;
 
 public class MyServerSocket {
     private ServerSocket server;
+    
     public MyServerSocket(String ipAddress) throws Exception {
         if (ipAddress != null && !ipAddress.isEmpty()) 
-          this.server = new ServerSocket(0, 1, InetAddress.getByName(ipAddress));
+          this.server = new ServerSocket(52018, 1, InetAddress.getByName(ipAddress));
         else 
-          this.server = new ServerSocket(0, 1, InetAddress.getLocalHost());
+          this.server = new ServerSocket(52018, 1, InetAddress.getLocalHost());
     }
-    private void listen() throws Exception {
+    /*private void listen() throws Exception {
         String data = null;
         Socket client = this.server.accept();
         String clientAddress = client.getInetAddress().getHostAddress();
@@ -32,13 +32,5 @@ public class MyServerSocket {
     
     public int getPort() {
         return this.server.getLocalPort();
-    }
-    public static void main(String[] args) throws Exception {
-        MyServerSocket app = new MyServerSocket(args[0]);
-        System.out.println("\r\nRunning Server: " + 
-                "Host=" + app.getSocketAddress().getHostAddress() + 
-                " Port=" + app.getPort());
-        
-        app.listen();
-    }
+    }*/
 }

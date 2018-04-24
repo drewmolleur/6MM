@@ -13,14 +13,22 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import model.MyServerSocket;
+import model.MyClientSocket;
+
 public class MenuGUI extends JFrame {
 	private static final long serialVersionUID = 8300757529304995200L;
 	private JTextField menuText;
 	private JPanel controls;
         private JPanel textField;
         private JTextField address;
+        private JButton join;
+        private String IPAddress;
 	private JButton hvAButton;
 	private JButton avAButton;
+	
+	private MyServerSocket server;
+	private MyClientSocket client;
 	
 	
 	public MenuGUI() {
@@ -35,6 +43,24 @@ public class MenuGUI extends JFrame {
                 address.setEditable(false);
                 address.setVisible(true);
                 address.setPreferredSize(new Dimension(200,24));
+                join = new JButton("join");
+                
+                join.addActionListener(new ActionListener() {
+                	@Override
+                	public void actionPerformed(ActionEvent e) {
+                		address.setEditable(false);
+                		IPAddress = address.getText();
+                		System.out.println(IPAddress);
+                		
+                		try {
+							server = new MyServerSocket(IPAddress);
+						} catch (Exception e1) {
+							System.out.println("Cannot Connect.");
+						}
+                		client = new MyClientSocket(IPAddress);
+                	}
+                });
+                textField.add(join);
 		hvAButton = new JButton("Human vs AI");
 		hvAButton.addActionListener(new ActionListener() {
 			@Override
@@ -43,6 +69,9 @@ public class MenuGUI extends JFrame {
 				game.setSize(600, 700);
 				game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				game.setVisible(true);
+				
+				hvAButton.setEnabled(false);
+                avAButton.setEnabled(false);
 			}
 		});
 		hvAButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -53,6 +82,9 @@ public class MenuGUI extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                     
                         address.setEditable(true);
+                        
+                        hvAButton.setEnabled(false);
+                        avAButton.setEnabled(false);
                     }
                 });
 		avAButton.setAlignmentX(CENTER_ALIGNMENT);
