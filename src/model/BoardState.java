@@ -192,7 +192,7 @@ public class BoardState {
 		boardID += positionsState[position] * powersOf3[position];
 	}
 	
-	private void tooglePlayer() {
+	public void tooglePlayer() {
 		boardID -= currentPlayer * powersOf3[NUMBER_OF_STARTING_PIECES];
 		
 		currentPlayer = getOtherPlayer();

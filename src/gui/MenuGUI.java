@@ -3,7 +3,6 @@ package gui;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
@@ -17,7 +16,6 @@ import static model.Server.startSender;
 import static model.Server.startServer;
 
 public class MenuGUI extends JFrame {
-    
     private static final long serialVersionUID = 8300757529304995200L;
     private JTextField menuText;
     private final JPanel controls;
@@ -27,11 +25,9 @@ public class MenuGUI extends JFrame {
     private String enemyIP;
     private JButton hvAButton;
     private JButton avAButton;
-
+    private JButton goSecond;
     public static Server socket;
-
     public MenuGUI() {
-
         super( "Six Men's Morris" );
         Container c = getContentPane();
         controls = new JPanel();
@@ -44,52 +40,60 @@ public class MenuGUI extends JFrame {
         address.setVisible(true);
         address.setPreferredSize(new Dimension(200,24));
         join = new JButton("join");
-        join.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed( ActionEvent e ) {
+        join.addActionListener((ActionEvent e) -> {
+            JFrame game = new GUI();
+            game.setSize(600, 700);
+            game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            game.setVisible(true);
+            hvAButton.setEnabled(false);
+            address.setEditable( false );
+            enemyIP = address.getText();
+            System.out.println( enemyIP );
+            try {
+                socket = new Server();
+                System.out.println("Socket Created");
                 
-                startServer();
-                startSender();
-                /*address.setEditable( false );
-                enemyIP = address.getText();
-                System.out.println( enemyIP );         // GOOD  
-                System.out.println("Socket Created");  // GOOD
-                try {
-                    socket = new Server();
-                } catch (Exception ex) {
-                    Logger.getLogger(MenuGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                */
+            } catch (Exception ex) {
+                Logger.getLogger(MenuGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+            startServer();
+            System.out.println("Server Started");
+            startSender( enemyIP );
         });
         textField.add(join);
         hvAButton = new JButton("Human vs AI");
-        hvAButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                    JFrame game = new GUI();
-                    game.setSize(600, 700);
-                    game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    game.setVisible(true);
-                    hvAButton.setEnabled(false);
-        avAButton.setEnabled(false);
-            }
+        hvAButton.addActionListener((ActionEvent e) -> {
+            JFrame game = new GUI();
+            game.setSize(600, 700);
+            game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            game.setVisible(true);
+            hvAButton.setEnabled(false);
+            avAButton.setEnabled(false);
         });
+        goSecond = new JButton("AI vs AI Go Second");
+        goSecond.addActionListener((ActionEvent e) -> {
+            JFrame game = new GUI(1);
+            game.setSize(600, 700);
+            game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            game.setVisible(true);
+            hvAButton.setEnabled(false);
+            avAButton.setEnabled(false);
+        });
+        goSecond.setAlignmentX(CENTER_ALIGNMENT);
+        goSecond.setAlignmentY(CENTER_ALIGNMENT);
         hvAButton.setAlignmentX(CENTER_ALIGNMENT);
         hvAButton.setAlignmentY(CENTER_ALIGNMENT);
         avAButton = new JButton("AI vs AI");
-        avAButton.addActionListener(new ActionListener() {
-            @Override 
-            public void actionPerformed(ActionEvent e) {
-                address.setEditable(true);
-                hvAButton.setEnabled(false);
-                avAButton.setEnabled(false);
-            }
+        avAButton.addActionListener((ActionEvent e) -> {
+            address.setEditable(true);
+            hvAButton.setEnabled(false);
+            avAButton.setEnabled(false);
         });
         avAButton.setAlignmentX(CENTER_ALIGNMENT);
         controls.add(Box.createVerticalGlue());
         controls.add(hvAButton);
         controls.add(avAButton);
+        controls.add(goSecond);
         controls.add(Box.createVerticalGlue());
         textField.add(Box.createHorizontalGlue());
         c.add(controls, "Center");

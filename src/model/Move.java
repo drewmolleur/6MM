@@ -88,4 +88,8 @@ public final class Move {
 	public int getPositionOfTakenPiece() {
 		return positionOfTakenPiece;
 	}
+        
+    public String getFormattedData() {
+        return "" + fromPosition + "|" + toPosition + "|" + positionOfTakenPiece ;
+    }
 }
